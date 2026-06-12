@@ -14,7 +14,7 @@ body{background:var(--black);color:var(--white);font-family:'Space Grotesk',sans
 .ticker-track{display:inline-flex;gap:80px;animation:tick 30s linear infinite}
 .ticker-track span{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--black)}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:rgba(8,8,8,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:rgba(8,8,8,0.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--yellow);letter-spacing:6px;animation:glow 2.5s ease-in-out infinite}
 @keyframes glow{0%,100%{text-shadow:0 0 20px rgba(255,229,0,0.4)}50%{text-shadow:0 0 50px rgba(255,229,0,0.8)}}
 .nav-pills{display:flex;gap:4px;background:var(--gray);padding:4px;border-radius:14px}
@@ -42,36 +42,34 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 .day-tab.active{background:var(--yellow);border-color:var(--yellow);color:var(--black)}
 .main-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
 .matches-wrap{display:flex;flex-direction:column;gap:14px}
-.match-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden}
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;transition:all 0.25s;position:relative;overflow:hidden}
 .match-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--yellow),var(--orange));transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
 .match-card:hover{border-color:#333;transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.6)}
 .match-card:hover::before,.match-card.selected::before{transform:scaleX(1)}
 .match-card.selected{border-color:var(--yellow);background:rgba(255,229,0,0.04)}
 .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.card-league{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--orange);text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.card-league img{width:18px;height:18px;object-fit:contain}
+.card-league{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--orange);text-transform:uppercase}
 .card-time{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
 .card-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .team{display:flex;align-items:center;gap:10px;flex:1}
 .team.away{flex-direction:row-reverse;text-align:right}
-.team img{width:36px;height:36px;object-fit:contain}
 .team-name{font-size:14px;font-weight:700}
-.score-box{text-align:center;padding:0 16px}
-.score{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:4px}
-.vs-text{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--border);letter-spacing:2px}
-.live-badge{display:inline-flex;align-items:center;gap:5px;background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:100px}
-.live-badge .dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1s ease-in-out infinite}
-.card-odds{display:flex;gap:8px;margin-bottom:14px}
-.odd-btn{flex:1;padding:10px 6px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--white);font-family:'DM Mono',monospace;font-size:14px;cursor:pointer;transition:all 0.2s;text-align:center}
-.odd-btn small{display:block;font-size:10px;color:var(--muted);font-family:'Space Grotesk',sans-serif;margin-bottom:2px}
+.vs-text{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--border);letter-spacing:2px;padding:0 16px}
+.markets-section{margin-top:4px}
+.market-label{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;margin-top:12px}
+.odds-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.odd-btn{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--white);font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;transition:all 0.2s;text-align:center;flex:1;min-width:70px}
+.odd-btn small{display:block;font-size:9px;color:var(--muted);font-family:'Space Grotesk',sans-serif;margin-bottom:2px;white-space:nowrap}
 .odd-btn:hover{border-color:var(--yellow);color:var(--yellow)}
 .odd-btn.picked{background:var(--yellow);color:var(--black);border-color:var(--yellow);font-weight:700}
 .odd-btn.picked small{color:rgba(0,0,0,0.55)}
-.prediction-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.18);border-radius:10px;font-size:12px;color:var(--green);font-weight:600}
+.odd-btn.na{opacity:0.3;cursor:not-allowed}
+.prediction-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.18);border-radius:10px;font-size:12px;color:var(--green);font-weight:600;margin-top:12px}
 .loading-state{text-align:center;padding:60px 20px}
 .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--yellow);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-state p,.empty-state{color:var(--muted);font-size:14px;text-align:center;padding:60px 20px}
+.loading-state p{color:var(--muted);font-size:14px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px}
 .slip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;position:sticky;top:88px}
 .slip-head{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--yellow);margin-bottom:4px}
 .slip-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
@@ -153,6 +151,7 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 .q-btn:hover{border-color:var(--yellow);color:var(--yellow)}
 .page-title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:3px;color:var(--yellow);margin-bottom:6px}
 .page-sub{color:var(--muted);font-size:14px;margin-bottom:32px}
+.divider{height:1px;background:var(--border);margin:12px 0}
 @media(max-width:900px){.main-layout{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,1fr)}.calc-grid{grid-template-columns:1fr}.chat-layout{grid-template-columns:1fr}}
 </style>
 </head>
@@ -167,37 +166,34 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 <button class="nav-pill" onclick="showPage('ai',this)">AI Chat</button>
 </div>
 </nav>
-  <div id="home" class="page active">
+
+<div id="home" class="page active">
 <div class="hero">
-<div class="hero-badge"><div class="live-dot"></div> LIVE SCORES & PREDICTIONS</div>
+<div class="hero-badge"><div class="live-dot"></div> LIVE ODDS & PREDICTIONS</div>
 <h1>PLAY <em>SMART.</em><br>WIN BIG.</h1>
-<p>Real fixtures. Live scores. AI predictions. Build your accumulator across every sport.</p>
+<p>Real odds from real bookmakers. Every market. Build your accumulator.</p>
 <div class="sport-filter">
 <button class="sf-btn active" onclick="setFilter('all',this)">🌍 All</button>
 <button class="sf-btn" onclick="setFilter('football',this)">⚽ Football</button>
 <button class="sf-btn" onclick="setFilter('basketball',this)">🏀 Basketball</button>
 <button class="sf-btn" onclick="setFilter('hockey',this)">🏒 Hockey</button>
 <button class="sf-btn" onclick="setFilter('tennis',this)">🎾 Tennis</button>
+<button class="sf-btn" onclick="setFilter('mma',this)">🥊 MMA</button>
 </div>
 </div>
 <div style="max-width:1300px;margin:0 auto;padding:0 24px">
 <div class="stats-bar">
 <div class="stat-box"><div class="stat-num" id="stat-live">—</div><div class="stat-lbl">Live Now</div></div>
-<div class="stat-box"><div class="stat-num" id="stat-today">—</div><div class="stat-lbl">Today's Games</div></div>
+<div class="stat-box"><div class="stat-num" id="stat-today">—</div><div class="stat-lbl">Upcoming</div></div>
 <div class="stat-box"><div class="stat-num" id="slip-count-stat">0</div><div class="stat-lbl">In Your Slip</div></div>
 <div class="stat-box"><div class="stat-num" id="stat-odds">1x</div><div class="stat-lbl">Current Odds</div></div>
 </div>
-<div class="day-tabs">
-<button class="day-tab active" onclick="setDay('today',this)">Today</button>
-<button class="day-tab" onclick="setDay('tomorrow',this)">Tomorrow</button>
-<button class="day-tab" onclick="setDay('live',this)">🔴 Live Now</button>
-</div>
 <div class="main-layout">
-<div><div id="matches-container"><div class="loading-state"><div class="spinner"></div><p>Loading real fixtures...</p></div></div></div>
+<div><div id="matches-container"><div class="loading-state"><div class="spinner"></div><p>Loading real odds...</p></div></div></div>
 <div class="slip">
 <div class="slip-head">YOUR SLIP</div>
 <div class="slip-sub">Selected: <span id="slip-count">0</span> / 15</div>
-<div class="slip-list" id="slip-list"><div class="slip-empty-msg">No games selected.<br>Pick matches from the left.</div></div>
+<div class="slip-list" id="slip-list"><div class="slip-empty-msg">No games selected.<br>Pick matches and markets.</div></div>
 <div class="slip-totals">
 <div class="slip-row"><span class="lbl">Total Odds</span><span class="val" id="total-odds-disp">1.00x</span></div>
 <div class="slip-row"><span class="lbl">Stake (₦)</span><span class="val"><input class="stake-input" id="stake-val" type="number" value="50000" oninput="renderSlip()"></span></div>
@@ -208,6 +204,7 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 </div>
 </div>
 </div>
+
 <div id="calculator" class="page">
 <div class="page-title">ACCUMULATOR CALCULATOR</div>
 <div class="page-sub">Work out your exact payout before you commit</div>
@@ -227,12 +224,14 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 </div>
 </div>
 </div>
+
 <div id="guides" class="page">
 <div class="page-title">SPORT GUIDES</div>
 <div class="page-sub">New to a sport? Learn how to bet it properly.</div>
 <div class="guide-grid" id="guide-grid"></div>
 <div class="guide-detail" id="guide-detail"><h2 id="gd-title"></h2><div id="gd-body"></div><button class="back-btn" onclick="closeGuide()">← Back</button></div>
 </div>
+
 <div id="ai" class="page">
 <div class="page-title">AI SPORTS ASSISTANT</div>
 <div class="page-sub">Ask anything about sports, betting or your accumulator</div>
@@ -240,117 +239,291 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 <div class="chat-box">
 <div class="chat-hdr"><div class="chat-hdr-dot"></div><h3>OKAY AI</h3><span>● Live</span></div>
 <div class="chat-msgs" id="chat-msgs">
-<div class="msg ai"><div class="msg-who">OKAY AI</div><div class="msg-bubble">Yo! Ask me anything about sports betting — odds, accumulators, predictions, any sport. What do you want to know? 🔥</div></div>
+<div class="msg ai"><div class="msg-who">OKAY AI</div><div class="msg-bubble">Yo! Ask me anything — over 2.5, BTTS, first half markets, accumulators, any sport. What do you want to know? 🔥</div></div>
 </div>
 <div class="chat-inp-row">
-<input class="chat-inp" id="chat-inp" placeholder="Ask about any sport or bet..." onkeydown="if(event.key==='Enter')sendMsg()">
+<input class="chat-inp" id="chat-inp" placeholder="Ask about any sport or market..." onkeydown="if(event.key==='Enter')sendMsg()">
 <button class="send-btn" id="send-btn" onclick="sendMsg()">SEND</button>
 </div>
 </div>
 <div class="quick-panel"><h3>QUICK ASK</h3>
-<button class="q-btn" onclick="qa('How does a 15-game accumulator work?')">How does a 15-game accumulator work?</button>
-<button class="q-btn" onclick="qa('What odds per game do I need to turn ₦50,000 into ₦5 million?')">₦50k to ₦5M — what odds per game?</button>
-<button class="q-btn" onclick="qa('How do I bet on NBA basketball?')">How to bet on NBA basketball?</button>
-<button class="q-btn" onclick="qa('What is a puck line in NHL hockey?')">What is a puck line in hockey?</button>
-<button class="q-btn" onclick="qa('How do MMA betting odds work?')">How do MMA odds work?</button>
-<button class="q-btn" onclick="qa('What markets give consistent 1.40 odds for accumulators?')">Best markets for 1.40 odds?</button>
+<button class="q-btn" onclick="qa('How does a 15-game accumulator work?')">How does a 15-game acca work?</button>
+<button class="q-btn" onclick="qa('What is BTTS betting and when should I use it?')">What is BTTS betting?</button>
+<button class="q-btn" onclick="qa('Explain over 2.5 goals betting')">What is over 2.5 goals?</button>
+<button class="q-btn" onclick="qa('What is first half betting and how does it work?')">How does first half betting work?</button>
+<button class="q-btn" onclick="qa('What odds per game do I need to turn ₦50,000 into ₦5 million in a 15-game accumulator?')">₦50k to ₦5M — what odds?</button>
+<button class="q-btn" onclick="qa('What is a puck line in NHL hockey?')">What is a puck line?</button>
+<button class="q-btn" onclick="qa('What markets give the most consistent 1.40 odds for accumulators?')">Best markets for 1.40 odds?</button>
 </div>
 </div>
 </div>
+
 <script>
-const SPORTS=['football','basketball','hockey','tennis'];
-let allFixtures=[],slip=[],currentDay='today',currentFilter='all';
-function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');if(btn)btn.classList.add('active');window.scrollTo(0,0)}
-async function loadFixtures(){
-document.getElementById('matches-container').innerHTML='<div class="loading-state"><div class="spinner"></div><p>Fetching real fixtures...</p></div>';
-try{
-if(currentDay==='live'){
-const res=await fetch('/api/live');
-const data=await res.json();
-allFixtures=data.fixtures||[];
-}else{
-const results=await Promise.allSettled(SPORTS.map(s=>fetch(`/api/fixtures?day=${currentDay}&sport=${s}`).then(r=>r.json())));
-allFixtures=results.flatMap(r=>r.status==='fulfilled'?r.value.fixtures||[]:[]);
+const SPORTS=['football','basketball','hockey','tennis','mma'];
+let allFixtures=[],slip=[],currentFilter='all';
+
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  window.scrollTo(0,0);
 }
-document.getElementById('stat-today').textContent=allFixtures.length;
-renderFixtures();updateTicker();
-}catch(e){document.getElementById('matches-container').innerHTML='<div class="empty-state">Could not load fixtures. Check connection.</div>'}}
+
+async function loadFixtures(){
+  document.getElementById('matches-container').innerHTML='<div class="loading-state"><div class="spinner"></div><p>Fetching real odds...</p></div>';
+  try{
+    const results=await Promise.allSettled(
+      SPORTS.map(s=>fetch(`/api/fixtures?sport=${s}`).then(r=>r.json()))
+    );
+    allFixtures=results.flatMap(r=>r.status==='fulfilled'?r.value.fixtures||[]:[] );
+    document.getElementById('stat-today').textContent=allFixtures.length;
+    renderFixtures();
+    updateTicker();
+  }catch(e){
+    document.getElementById('matches-container').innerHTML='<div class="empty-state">Could not load fixtures. Try again later.</div>';
+  }
+}
+
 function renderFixtures(){
-const container=document.getElementById('matches-container');
-const fixtures=currentFilter==='all'?allFixtures:allFixtures.filter(f=>f.sport===currentFilter);
-if(!fixtures.length){container.innerHTML='<div class="empty-state">No fixtures found for this selection.</div>';return}
-container.innerHTML='<div class="matches-wrap">'+fixtures.map(f=>matchCard(f)).join('')+'</div>'}
+  const container=document.getElementById('matches-container');
+  const fixtures=currentFilter==='all'?allFixtures:allFixtures.filter(f=>f.sport===currentFilter);
+  if(!fixtures.length){container.innerHTML='<div class="empty-state">No fixtures found for this selection.</div>';return}
+  container.innerHTML='<div class="matches-wrap">'+fixtures.map(f=>matchCard(f)).join('')+'</div>';
+}
+
 function matchCard(f){
-const inSlip=slip.find(s=>s.id===f.id);const picked=inSlip?inSlip.pick:null;
-const isLive=['1H','2H','HT','ET'].includes(f.status);
-const hasScore=f.home.score!==null&&f.away.score!==null;
-const timeStr=f.date?new Date(f.date).toLocaleTimeString('en-NG',{hour:'2-digit',minute:'2-digit'}):'';
-const e={football:'⚽',basketball:'🏀',hockey:'🏒',tennis:'🎾'}[f.sport]||'🏅';
-const odds=genOdds(f);const homeLogo=f.home.logo?`<img src="${f.home.logo}" onerror="this.style.display='none'" alt="">`:'';
-const awayLogo=f.away.logo?`<img src="${f.away.logo}" onerror="this.style.display='none'" alt="">`:'';
-return`<div class="match-card${inSlip?' selected':''}" id="mc-${f.id}">
-<div class="card-top"><div class="card-league">${e} ${f.league}${f.country?' · '+f.country:''}</div>
-${isLive?`<span class="live-badge"><span class="dot"></span>LIVE${f.elapsed?' '+f.elapsed+"'":''}}</span>`:`<span class="card-time">${timeStr}</span>`}</div>
+  const inSlip=slip.find(s=>s.id===f.id);
+  const picked=inSlip?inSlip.pickKey:null;
+  const e={football:'⚽',basketball:'🏀',hockey:'🏒',tennis:'🎾',mma:'🥊'}[f.sport]||'🏅';
+  const timeStr=f.date?new Date(f.date).toLocaleString('en-NG',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+  const m=f.markets||{};
+  const h2h=m.h2h||{};
+  const totals=m.totals||{};
+  const btts=m.btts||{};
+  const fh=m.firstHalf||{};
+
+  function ob(key,label,val){
+    if(!val)return`<button class="odd-btn na"><small>${label}</small>N/A</button>`;
+    return`<button class="odd-btn${picked===key?' picked':''}" onclick="pickOdd('${f.id}','${key}',${val},'${f.home.name} vs ${f.away.name}','${label}')"><small>${label}</small>${val}</button>`;
+  }
+
+  const bestPick = h2h.home&&h2h.away?(h2h.home<h2h.away?`${f.home.name} to Win @ ${h2h.home}`:`${f.away.name} to Win @ ${h2h.away}`):'Check odds';
+
+  return`<div class="match-card${inSlip?' selected':''}" id="mc-${f.id}">
+<div class="card-top"><div class="card-league">${e} ${f.league}</div><span class="card-time">${timeStr}</span></div>
 <div class="card-teams">
-<div class="team">${homeLogo}<span class="team-name">${f.home.name}</span></div>
-<div class="score-box">${hasScore?`<div class="score">${f.home.score} : ${f.away.score}</div>`:`<div class="vs-text">VS</div>`}</div>
-<div class="team away">${awayLogo}<span class="team-name">${f.away.name}</span></div>
+<div class="team"><span class="team-name">${f.home.name}</span></div>
+<div class="vs-text">VS</div>
+<div class="team away"><span class="team-name">${f.away.name}</span></div>
 </div>
-<div class="card-odds">
-<button class="odd-btn${picked==='home'?' picked':''}" onclick="pickOdd('${f.id}','home',${odds.home},'${f.home.name} vs ${f.away.name}')"><small>1 – Home</small>${odds.home}</button>
-${f.sport==='football'?`<button class="odd-btn${picked==='draw'?' picked':''}" onclick="pickOdd('${f.id}','draw',${odds.draw},'${f.home.name} vs ${f.away.name}')"><small>X – Draw</small>${odds.draw}</button>`:''}
-<button class="odd-btn${picked==='away'?' picked':''}" onclick="pickOdd('${f.id}','away',${odds.away},'${f.home.name} vs ${f.away.name}')"><small>2 – Away</small>${odds.away}</button>
+<div class="markets-section">
+<div class="market-label">Match Result (1X2)</div>
+<div class="odds-row">
+${ob('h2h_home','1 Home',h2h.home)}
+${f.sport==='football'?ob('h2h_draw','X Draw',h2h.draw):''}
+${ob('h2h_away','2 Away',h2h.away)}
 </div>
-<div class="prediction-row">✅ OKAY Tip: ${odds.home<odds.away?f.home.name+' to win @ '+odds.home:f.away.name+' to win @ '+odds.away}</div>
-</div>`}
-function genOdds(f){const seed=(f.home.name+f.away.name).split('').reduce((a,c)=>a+c.charCodeAt(0),0);const r=(seed%100)/100;
-if(['tennis','basketball','mma'].includes(f.sport)){const h=+(1.3+r*1.2).toFixed(2);const a=+(2.0+(1-r)*1.5).toFixed(2);return{home:h,away:a}}
-return{home:+(1.5+r*1.5).toFixed(2),draw:+(2.9+r*0.6).toFixed(2),away:+(2.0+(1-r)*2.0).toFixed(2)}}
-function pickOdd(id,pick,odd,name){
-const ex=slip.findIndex(s=>s.id===id);
-if(ex>=0){if(slip[ex].pick===pick)slip.splice(ex,1);else slip[ex]={id,name,pick,odd}}
-else{if(slip.length>=15){alert('Maximum 15 games!');return}slip.push({id,name,pick,odd})}
-renderFixtures();renderSlip()}
+${f.sport==='football'?`
+<div class="divider"></div>
+<div class="market-label">Goals — Over / Under</div>
+<div class="odds-row">
+${ob('o15','Over 1.5',totals.over15)}
+${ob('o25','Over 2.5',totals.over25)}
+${ob('o35','Over 3.5',totals.over35)}
+${ob('u25','Under 2.5',totals.under25)}
+</div>
+<div class="divider"></div>
+<div class="market-label">Both Teams to Score</div>
+<div class="odds-row">
+${ob('btts_yes','BTTS Yes',btts.yes)}
+${ob('btts_no','BTTS No',btts.no)}
+</div>
+<div class="divider"></div>
+<div class="market-label">First Half Result</div>
+<div class="odds-row">
+${ob('fh_home','1H Home',fh.home)}
+${ob('fh_draw','1H Draw',fh.draw)}
+${ob('fh_away','1H Away',fh.away)}
+</div>`:''}
+</div>
+<div class="prediction-row">✅ OKAY Tip: ${bestPick}</div>
+</div>`;
+}
+
+function pickOdd(id,pickKey,odd,name,label){
+  const ex=slip.findIndex(s=>s.id===id);
+  if(ex>=0){
+    if(slip[ex].pickKey===pickKey)slip.splice(ex,1);
+    else slip[ex]={id,name,pickKey,odd,label};
+  }else{
+    if(slip.length>=15){alert('Maximum 15 games!');return}
+    slip.push({id,name,pickKey,odd,label});
+  }
+  renderFixtures();
+  renderSlip();
+}
+
 function renderSlip(){
-const stake=parseFloat(document.getElementById('stake-val').value)||0;
-document.getElementById('slip-count').textContent=slip.length;
-document.getElementById('slip-count-stat').textContent=slip.length;
-if(!slip.length){document.getElementById('slip-list').innerHTML='<div class="slip-empty-msg">No games selected.<br>Pick matches from the left.</div>';document.getElementById('total-odds-disp').textContent='1.00x';document.getElementById('payout-disp').textContent='₦0';document.getElementById('stat-odds').textContent='1x';document.getElementById('place-btn').disabled=true;return}
-const totalOdds=slip.reduce((a,s)=>a*s.odd,1);const payout=stake*totalOdds;
-document.getElementById('slip-list').innerHTML=slip.map(s=>`<div class="slip-item"><div><div class="slip-item-name">${s.name}</div><div class="slip-item-pick">${s.pick==='home'?'1 – Home':s.pick==='draw'?'X – Draw':'2 – Away'} @ ${s.odd}</div></div><div class="slip-item-right"><span class="slip-item-odd">${s.odd}</span><button class="slip-remove" onclick="removeSlip('${s.id}')">✕</button></div></div>`).join('');
-document.getElementById('total-odds-disp').textContent=totalOdds.toFixed(2)+'x';
-document.getElementById('stat-odds').textContent=totalOdds.toFixed(0)+'x';
-document.getElementById('payout-disp').textContent='₦'+Math.round(payout).toLocaleString('en-NG');
-document.getElementById('place-btn').disabled=false}
+  const stake=parseFloat(document.getElementById('stake-val').value)||0;
+  document.getElementById('slip-count').textContent=slip.length;
+  document.getElementById('slip-count-stat').textContent=slip.length;
+  if(!slip.length){
+    document.getElementById('slip-list').innerHTML='<div class="slip-empty-msg">No games selected.<br>Pick matches and markets.</div>';
+    document.getElementById('total-odds-disp').textContent='1.00x';
+    document.getElementById('payout-disp').textContent='₦0';
+    document.getElementById('stat-odds').textContent='1x';
+    document.getElementById('place-btn').disabled=true;
+    return;
+  }
+  const totalOdds=slip.reduce((a,s)=>a*s.odd,1);
+  const payout=stake*totalOdds;
+  document.getElementById('slip-list').innerHTML=slip.map(s=>`
+    <div class="slip-item">
+      <div><div class="slip-item-name">${s.name}</div><div class="slip-item-pick">${s.label} @ ${s.odd}</div></div>
+      <div class="slip-item-right"><span class="slip-item-odd">${s.odd}</span><button class="slip-remove" onclick="removeSlip('${s.id}')">✕</button></div>
+    </div>`).join('');
+  document.getElementById('total-odds-disp').textContent=totalOdds.toFixed(2)+'x';
+  document.getElementById('stat-odds').textContent=totalOdds.toFixed(0)+'x';
+  document.getElementById('payout-disp').textContent='₦'+Math.round(payout).toLocaleString('en-NG');
+  document.getElementById('place-btn').disabled=false;
+}
+
 function removeSlip(id){slip=slip.filter(s=>s.id!==id);renderFixtures();renderSlip()}
-function confirmSlip(){const stake=parseFloat(document.getElementById('stake-val').value)||0;const totalOdds=slip.reduce((a,s)=>a*s.odd,1);alert(`🔥 SLIP READY!\n\n${slip.length} games\nOdds: ${totalOdds.toFixed(2)}x\nStake: ₦${stake.toLocaleString()}\nPotential win: ₦${Math.round(stake*totalOdds).toLocaleString()}\n\nNow place this on your betting platform!`)}
-function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.sf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderFixtures()}
-function setDay(d,btn){currentDay=d;document.querySelectorAll('.day-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadFixtures()}
-function updateTicker(){if(!allFixtures.length)return;const e={football:'⚽',basketball:'🏀',hockey:'🏒',tennis:'🎾'};const items=allFixtures.slice(0,10).map(f=>{const odds=genOdds(f);return`${e[f.sport]||'🏅'} ${f.home.name} vs ${f.away.name} — Tip: ${odds.home<odds.away?f.home.name:f.away.name} @ ${Math.min(odds.home,odds.away)}`});const track=document.getElementById('ticker-track');track.innerHTML=[...items,...items].map(i=>`<span>${i}</span>`).join('')}
-function fCalc(){const s=parseFloat(document.getElementById('fc-stake').value)||0;const g=parseInt(document.getElementById('fc-games').value)||1;const o=parseFloat(document.getElementById('fc-odds').value)||1;const t=Math.pow(o,g);document.getElementById('fc-result').textContent='₦'+Math.round(s*t).toLocaleString('en-NG');document.getElementById('fc-sub').textContent='Total odds: '+t.toFixed(2)+'x'}
-function rCalc(){const s=parseFloat(document.getElementById('rc-stake').value)||1;const t=parseFloat(document.getElementById('rc-target').value)||1;const g=parseInt(document.getElementById('rc-games').value)||1;const n=t/s;const p=Math.pow(n,1/g);document.getElementById('rc-result').textContent='x'+p.toFixed(2);document.getElementById('rc-sub').textContent='Total multiplier: '+Math.round(n).toLocaleString()+'x'}
+
+function confirmSlip(){
+  const stake=parseFloat(document.getElementById('stake-val').value)||0;
+  const totalOdds=slip.reduce((a,s)=>a*s.odd,1);
+  alert(`🔥 SLIP READY!\n\n${slip.length} games\nOdds: ${totalOdds.toFixed(2)}x\nStake: ₦${stake.toLocaleString()}\nPotential win: ₦${Math.round(stake*totalOdds).toLocaleString()}\n\nNow place this on your betting platform!`);
+}
+
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.sf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFixtures();
+}
+
+function updateTicker(){
+  if(!allFixtures.length)return;
+  const e={football:'⚽',basketball:'🏀',hockey:'🏒',tennis:'🎾',mma:'🥊'};
+  const items=allFixtures.slice(0,10).map(f=>{
+    const h=f.markets?.h2h;
+    const tip=h?.home&&h?.away?(h.home<h.away?f.home.name:f.away.name)+' @ '+Math.min(h.home||99,h.away||99):'Check odds';
+    return`${e[f.sport]||'🏅'} ${f.home.name} vs ${f.away.name} — Tip: ${tip}`;
+  });
+  const track=document.getElementById('ticker-track');
+  track.innerHTML=[...items,...items].map(i=>`<span>${i}</span>`).join('');
+}
+
+function fCalc(){
+  const s=parseFloat(document.getElementById('fc-stake').value)||0;
+  const g=parseInt(document.getElementById('fc-games').value)||1;
+  const o=parseFloat(document.getElementById('fc-odds').value)||1;
+  const t=Math.pow(o,g);
+  document.getElementById('fc-result').textContent='₦'+Math.round(s*t).toLocaleString('en-NG');
+  document.getElementById('fc-sub').textContent='Total odds: '+t.toFixed(2)+'x';
+}
+
+function rCalc(){
+  const s=parseFloat(document.getElementById('rc-stake').value)||1;
+  const t=parseFloat(document.getElementById('rc-target').value)||1;
+  const g=parseInt(document.getElementById('rc-games').value)||1;
+  const n=t/s;const p=Math.pow(n,1/g);
+  document.getElementById('rc-result').textContent='x'+p.toFixed(2);
+  document.getElementById('rc-sub').textContent='Total multiplier: '+Math.round(n).toLocaleString()+'x';
+}
+
 const GUIDES=[
-{icon:'🏀',name:'BASKETBALL',desc:'Fast-paced, high-scoring — great for accumulators.',body:'<p>Basketball is one of the best sports for accumulators. NBA teams are consistent and high scores make moneylines predictable.</p>',bets:[{n:'Moneyline',d:'Pick who wins. Top teams at home are very reliable.'},{n:'Point Spread',d:'Favourite must win by X points. Example: Lakers -5.5 means win by 6+.'},{n:'Over/Under',d:'Total combined score over or under a number. NBA averages 220+ points.'},{n:'Player Props',d:'Bet on individual stats — points, rebounds, assists.'}]},
-{icon:'🎾',name:'TENNIS',desc:'Clean 1v1 — top players are very consistent picks.',body:'<p>Tennis is brilliant for accumulators. Top-ranked vs lower-ranked at 1.35–1.50 stacks up perfectly.</p>',bets:[{n:'Match Winner',d:'Pick who wins. Top seeds are reliable against lower-ranked players.'},{n:'Set Betting',d:'Predict exact set score. 2-0 for dominant players is common.'},{n:'Total Games',d:'Over/Under on total games. Short matches go under.'},{n:'Handicap',d:'Player must win by X games.'}]},
-{icon:'🏒',name:'HOCKEY',desc:'Low scoring — puck line and totals are your tools.',body:'<p>NHL is low-scoring so moneyline dominates. Puck line is always 1.5 goals.</p>',bets:[{n:'Moneyline',d:'Pick the winner. Odds are usually close on both sides.'},{n:'Puck Line',d:'Always -1.5 or +1.5. Favourite must win by 2+.'},{n:'Over/Under',d:'Total goals. 5.5 is the common line in NHL.'},{n:'Period Betting',d:'Bet on just the 1st or 2nd period result.'}]},
-{icon:'🥊',name:'MMA / BOXING',desc:'High odds, explosive finishes.',body:'<p>Champions are reliable for moneyline. Method of victory can make your accumulator explode.</p>',bets:[{n:'Fight Winner',d:'Pick who wins. Champions at low odds are usually safe.'},{n:'Method of Victory',d:'KO/TKO, Submission, or Decision. Know the fighter style.'},{n:'Round Betting',d:'Which round does it end? Very high odds.'},{n:'Goes the Distance',d:'Will it last all rounds? Technical fighters usually do.'}]},
-{icon:'⚽',name:'FOOTBALL',desc:'Most markets of any sport.',body:'<p>Football has more betting markets than any sport. Always a good angle depending on the match.</p>',bets:[{n:'1X2 Result',d:'Home (1), Draw (X), Away (2). The classic football bet.'},{n:'Both Teams Score',d:'Will both teams score? Great in attacking leagues like EPL.'},{n:'Over/Under Goals',d:'Over 2.5 means 3+ goals scored.'},{n:'Asian Handicap',d:'Removes the draw. Better value for strong favourites.'}]},
-{icon:'🏈',name:'NFL',desc:'Point spreads dominate — biggest betting sport in the world.',body:'<p>The NFL is the world\'s biggest betting market. Point spread is everything.</p>',bets:[{n:'Point Spread',d:'Favourite must win by more than the spread.'},{n:'Moneyline',d:'Straight winner pick.'},{n:'Over/Under',d:'Total points by both teams. NFL averages 45-50 points.'},{n:'Player Props',d:'Passing yards, TDs, rushing yards.'}]}];
-function renderGuides(){document.getElementById('guide-grid').innerHTML=GUIDES.map((g,i)=>`<div class="guide-card" onclick="openGuide(${i})"><div class="guide-icon">${g.icon}</div><h3>${g.name}</h3><p>${g.desc}</p></div>`).join('')}
-function openGuide(i){const g=GUIDES[i];document.getElementById('guide-grid').style.display='none';document.getElementById('gd-title').textContent=g.icon+' '+g.name+' BETTING GUIDE';document.getElementById('gd-body').innerHTML=g.body+'<div class="bet-list">'+g.bets.map(b=>`<div class="bet-item"><h4>${b.n}</h4><p>${b.d}</p></div>`).join('')+'</div>';document.getElementById('guide-detail').classList.add('open')}
-function closeGuide(){document.getElementById('guide-grid').style.display='grid';document.getElementById('guide-detail').classList.remove('open')}
-async function sendMsg(){const inp=document.getElementById('chat-inp');const msg=inp.value.trim();if(!msg)return;inp.value='';addMsg('user',msg);document.getElementById('send-btn').disabled=true;showTyping();
-try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are OKAY AI — a sharp sports betting assistant. You know NBA, EPL, NHL, ATP tennis, MMA and NFL inside out. Explain betting markets, odds, accumulators and strategy clearly. Tone: confident, direct, energetic. User is Nigerian so reference Naira (₦). Always remind about responsible betting.',messages:[{role:'user',content:msg}]})});const data=await res.json();removeTyping();addMsg('ai',data.content?.map(c=>c.text||'').join('')||'Try again!')}catch(e){removeTyping();addMsg('ai','Connection issue. Try again ⚡')}
-document.getElementById('send-btn').disabled=false}
-function qa(q){showPage('ai',document.querySelectorAll('.nav-pill')[3]);document.getElementById('chat-inp').value=q;sendMsg()}
-function addMsg(role,text){const c=document.getElementById('chat-msgs');const d=document.createElement('div');d.className='msg '+role;d.innerHTML=`<div class="msg-who">${role==='ai'?'OKAY AI':'YOU'}</div><div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`;c.appendChild(d);c.scrollTop=c.scrollHeight}
-function showTyping(){const c=document.getElementById('chat-msgs');const d=document.createElement('div');d.className='msg ai';d.id='typing';d.innerHTML='<div class="msg-who">OKAY AI</div><div class="typing"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>';c.appendChild(d);c.scrollTop=c.scrollHeight}
+{icon:'⚽',name:'FOOTBALL',desc:'Most markets of any sport — 1X2, BTTS, goals, first half.',body:'<p>Football has more betting markets than any sport. From match result to first half goals — always an angle.</p>',bets:[{n:'1X2 Match Result',d:'Home (1), Draw (X), Away (2). The classic bet.'},{n:'Both Teams to Score',d:'Will both teams score at least one goal? Yes or No.'},{n:'Over/Under Goals',d:'Over 2.5 means 3+ goals. Over 1.5 means 2+ goals.'},{n:'First Half Result',d:'Who wins just the first half? Great for strong home teams.'},{n:'Asian Handicap',d:'Removes the draw. Better value for strong favourites.'}]},
+{icon:'🏀',name:'BASKETBALL',desc:'Fast-paced — moneyline and totals dominate.',body:'<p>NBA is perfect for accumulators. High scoring makes totals very predictable.</p>',bets:[{n:'Moneyline',d:'Pick who wins. Top teams at home are reliable.'},{n:'Point Spread',d:'Favourite must win by X points.'},{n:'Over/Under',d:'Total combined score. NBA games average 220+ points.'},{n:'Player Props',d:'Points, rebounds, assists for individual players.'}]},
+{icon:'🏒',name:'HOCKEY',desc:'Low scoring — puck line and totals are your tools.',body:'<p>NHL is low-scoring. Puck line is always 1.5 goals.</p>',bets:[{n:'Moneyline',d:'Pick the winner straight up.'},{n:'Puck Line',d:'Favourite must win by 2+. Better payout than moneyline.'},{n:'Over/Under',d:'Total goals. 5.5 is the common NHL line.'},{n:'Period Betting',d:'Bet on just the 1st period result.'}]},
+{icon:'🥊',name:'MMA',desc:'High odds, explosive finishes — method of victory pays big.',body:'<p>Champions are reliable moneyline picks. Method of victory can explode your accumulator.</p>',bets:[{n:'Fight Winner',d:'Pick who wins the fight.'},{n:'Method of Victory',d:'KO/TKO, Submission, or Decision.'},{n:'Round Betting',d:'Which round does it end? Very high odds.'},{n:'Goes the Distance',d:'Will it last all rounds?'}]},
+{icon:'🎾',name:'TENNIS',desc:'Clean 1v1 — top players are very consistent.',body:'<p>Top-ranked vs lower-ranked at 1.35–1.50 stacks perfectly in accumulators.</p>',bets:[{n:'Match Winner',d:'Pick who wins. Top seeds vs lower-ranked are reliable.'},{n:'Set Betting',d:'Predict exact set score. 2-0 for dominant players is common.'},{n:'Total Games',d:'Over/Under on total games played.'},{n:'Handicap',d:'Player must win by X games.'}]},
+{icon:'🏈',name:'NFL',desc:'Point spreads dominate — biggest betting market in the world.',body:'<p>Point spread is everything in NFL. Most bets involve the favourite winning by a margin.</p>',bets:[{n:'Point Spread',d:'Favourite must win by more than the spread.'},{n:'Moneyline',d:'Straight winner pick.'},{n:'Over/Under',d:'Total points. NFL averages 45-50 points per game.'},{n:'Player Props',d:'Passing yards, touchdowns, rushing yards.'}]}
+];
+
+function renderGuides(){
+  document.getElementById('guide-grid').innerHTML=GUIDES.map((g,i)=>`<div class="guide-card" onclick="openGuide(${i})"><div class="guide-icon">${g.icon}</div><h3>${g.name}</h3><p>${g.desc}</p></div>`).join('');
+}
+
+function openGuide(i){
+  const g=GUIDES[i];
+  document.getElementById('guide-grid').style.display='none';
+  document.getElementById('gd-title').textContent=g.icon+' '+g.name+' BETTING GUIDE';
+  document.getElementById('gd-body').innerHTML=g.body+'<div class="bet-list">'+g.bets.map(b=>`<div class="bet-item"><h4>${b.n}</h4><p>${b.d}</p></div>`).join('')+'</div>';
+  document.getElementById('guide-detail').classList.add('open');
+}
+
+function closeGuide(){
+  document.getElementById('guide-grid').style.display='grid';
+  document.getElementById('guide-detail').classList.remove('open');
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-inp');
+  const msg=inp.value.trim();
+  if(!msg)return;
+  inp.value='';
+  addMsg('user',msg);
+  document.getElementById('send-btn').disabled=true;
+  showTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'You are OKAY AI — a sharp sports betting assistant. You know NBA, EPL, NHL, tennis, MMA and NFL inside out. Explain betting markets including 1X2, BTTS, over/under, first half, Asian handicap, accumulators and strategy. Tone: confident, direct, energetic. User is Nigerian so reference Naira (₦). Always remind about responsible betting.',
+        messages:[{role:'user',content:msg}]
+      })
+    });
+    const data=await res.json();
+    removeTyping();
+    addMsg('ai',data.content?.map(c=>c.text||'').join('')||'Try again!');
+  }catch(e){
+    removeTyping();
+    addMsg('ai','Connection issue ⚡');
+  }
+  document.getElementById('send-btn').disabled=false;
+}
+
+function qa(q){
+  showPage('ai',document.querySelectorAll('.nav-pill')[3]);
+  document.getElementById('chat-inp').value=q;
+  sendMsg();
+}
+
+function addMsg(role,text){
+  const c=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.className='msg '+role;
+  d.innerHTML=`<div class="msg-who">${role==='ai'?'OKAY AI':'YOU'}</div><div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  c.appendChild(d);
+  c.scrollTop=c.scrollHeight;
+}
+
+function showTyping(){
+  const c=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.className='msg ai';d.id='typing';
+  d.innerHTML='<div class="msg-who">OKAY AI</div><div class="typing"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>';
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+
 function removeTyping(){const t=document.getElementById('typing');if(t)t.remove()}
-async function updateLiveStat(){try{const res=await fetch('/api/live');const data=await res.json();document.getElementById('stat-live').textContent=data.count||0}catch(e){}}
+
+async function updateLiveStat(){
+  try{
+    const res=await fetch('/api/live');
+    const data=await res.json();
+    document.getElementById('stat-live').textContent=data.count||0;
+  }catch(e){}
+}
+
 renderGuides();fCalc();rCalc();loadFixtures();updateLiveStat();
 setInterval(updateLiveStat,60000);
-setInterval(()=>{if(currentDay==='live')loadFixtures()},60000);
 </script>
 </body>
 </html>
-
