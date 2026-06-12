@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-const API_KEY = process.env.API_SPORTS_KEY || '4d3e6e1c7f76585199c58dfcab7e51e9';
+const API_KEY = process.env.API_SPORTS_KEY || '5ffc4335dd60e45b473ee4dffaa92a0c';
 
 function getDate(offset = 0) {
   const d = new Date();
