@@ -7,88 +7,128 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-const API_KEY = '5ffc4335dd60e45b473ee4dffaa92a0c';
+const API_KEY = '46d72b004a13cdf6fb4ab3a747178297';
+const BASE = 'https://api.the-odds-api.com/v4';
 
+const SPORT_KEYS = {
+  football: 'soccer_epl',
+  basketball: 'basketball_nba',
+  hockey: 'icehockey_nhl',
+  tennis: 'tennis_atp_french_open',
+  mma: 'mma_mixed_martial_arts'
+};
 
-
-function getDate(offset = 0) {
-  const d = new Date();
-  d.setDate(d.getDate() + offset);
-  return d.toISOString().split('T')[0];
-}
-
-async function fetchSport(base, endpoint, params) {
+async function fetchOdds(sportKey, markets = 'h2h') {
   try {
-    const res = await axios.get(`${base}${endpoint}`, {
-      headers: { 'x-apisports-key': API_KEY },
-      params,
+    const res = await axios.get(`${BASE}/sports/${sportKey}/odds`, {
+      params: {
+        apiKey: API_KEY,
+        regions: 'eu',
+        markets,
+        oddsFormat: 'decimal',
+        dateFormat: 'iso'
+      },
       timeout: 8000
     });
-    return res.data.response || [];
+    return res.data || [];
   } catch (e) {
+    console.error('Odds API error:', e.message);
     return [];
   }
 }
 
-app.get('/api/fixtures', async (req, res) => {
-  const { day = 'today', sport = 'football' } = req.query;
-  const offset = day === 'tomorrow' ? 1 : 0;
-  const date = getDate(offset);
+function extractMarket(bookmakers, marketKey) {
+  for (const bm of bookmakers) {
+    const market = bm.markets.find(m => m.key === marketKey);
+    if (market) return market.outcomes;
+  }
+  return null;
+}
 
-  const config = {
-    football:   { base: 'https://v3.football.api-sports.io',   endpoint: '/fixtures' },
-    basketball: { base: 'https://v1.basketball.api-sports.io', endpoint: '/games' },
-    hockey:     { base: 'https://v1.hockey.api-sports.io',     endpoint: '/games' },
-    tennis:     { base: 'https://v1.tennis.api-sports.io',     endpoint: '/games' },
-  };
+function formatFixture(game, sport) {
+  const bookmakers = game.bookmakers || [];
+  
+  // h2h odds
+  const h2h = extractMarket(bookmakers, 'h2h');
+  const homeOdd = h2h?.find(o => o.name === game.home_team)?.price || null;
+  const awayOdd = h2h?.find(o => o.name === game.away_team)?.price || null;
+  const drawOdd = h2h?.find(o => o.name === 'Draw')?.price || null;
 
-  const { base, endpoint } = config[sport] || config.football;
-  const raw = await fetchSport(base, endpoint, { date, timezone: 'Africa/Lagos' });
+  // totals (over/under)
+  const totals = extractMarket(bookmakers, 'totals');
+  const over25 = totals?.find(o => o.name === 'Over' && o.point === 2.5)?.price || null;
+  const under25 = totals?.find(o => o.name === 'Under' && o.point === 2.5)?.price || null;
+  const over15 = totals?.find(o => o.name === 'Over' && o.point === 1.5)?.price || null;
+  const over35 = totals?.find(o => o.name === 'Over' && o.point === 3.5)?.price || null;
 
-  const fixtures = raw.map(f => {
-    if (sport === 'football') {
-      return {
-        id: String(f.fixture.id),
-        sport,
-        league: f.league.name,
-        country: f.league.country,
-        leagueLogo: f.league.logo,
-        date: f.fixture.date,
-        status: f.fixture.status?.short,
-        elapsed: f.fixture.status?.elapsed,
-        home: { name: f.teams.home.name, logo: f.teams.home.logo, score: f.goals.home },
-        away: { name: f.teams.away.name, logo: f.teams.away.logo, score: f.goals.away }
-      };
+  // btts
+  const btts = extractMarket(bookmakers, 'btts');
+  const bttsYes = btts?.find(o => o.name === 'Yes')?.price || null;
+  const bttsNo = btts?.find(o => o.name === 'No')?.price || null;
+
+  // first half
+  const h1h2h = extractMarket(bookmakers, 'h1_h2h');
+  const firstHalfHome = h1h2h?.find(o => o.name === game.home_team)?.price || null;
+  const firstHalfAway = h1h2h?.find(o => o.name === game.away_team)?.price || null;
+  const firstHalfDraw = h1h2h?.find(o => o.name === 'Draw')?.price || null;
+
+  return {
+    id: game.id,
+    sport,
+    league: game.sport_title,
+    date: game.commence_time,
+    status: new Date(game.commence_time) > new Date() ? 'NS' : 'FT',
+    home: { name: game.home_team, score: null },
+    away: { name: game.away_team, score: null },
+    markets: {
+      h2h: { home: homeOdd, draw: drawOdd, away: awayOdd },
+      totals: { over15, over25, over35, under25 },
+      btts: { yes: bttsYes, no: bttsNo },
+      firstHalf: { home: firstHalfHome, draw: firstHalfDraw, away: firstHalfAway }
     }
-    return {
-      id: String(f.id),
-      sport,
-      league: f.league?.name || f.tournament?.name || sport,
-      country: f.country?.name || '',
-      date: f.date,
-      status: f.status?.short,
-      home: { name: f.teams?.home?.name || f.players?.home?.name || 'Home', logo: f.teams?.home?.logo, score: f.scores?.home?.total ?? f.scores?.home ?? null },
-      away: { name: f.teams?.away?.name || f.players?.away?.name || 'Away', logo: f.teams?.away?.logo, score: f.scores?.away?.total ?? f.scores?.away ?? null }
-    };
-  });
+  };
+}
 
-  res.json({ success: true, count: fixtures.length, fixtures });
+app.get('/api/fixtures', async (req, res) => {
+  const { sport = 'football' } = req.query;
+  const sportKey = SPORT_KEYS[sport] || SPORT_KEYS.football;
+  
+  try {
+    const games = await fetchOdds(sportKey, 'h2h,totals,btts,h1_h2h');
+    const fixtures = games.map(g => formatFixture(g, sport));
+    res.json({ success: true, count: fixtures.length, fixtures });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
 });
 
 app.get('/api/live', async (req, res) => {
-  const raw = await fetchSport('https://v3.football.api-sports.io', '/fixtures', { live: 'all' });
-  const fixtures = raw.map(f => ({
-    id: String(f.fixture.id),
-    sport: 'football',
-    league: f.league.name,
-    leagueLogo: f.league.logo,
-    date: f.fixture.date,
-    status: f.fixture.status?.short,
-    elapsed: f.fixture.status?.elapsed,
-    home: { name: f.teams.home.name, logo: f.teams.home.logo, score: f.goals.home },
-    away: { name: f.teams.away.name, logo: f.teams.away.logo, score: f.goals.away }
-  }));
-  res.json({ success: true, count: fixtures.length, fixtures });
+  try {
+    const games = await fetchOdds(SPORT_KEYS.football, 'h2h');
+    const now = new Date();
+    const live = games
+      .filter(g => {
+        const start = new Date(g.commence_time);
+        const diff = (now - start) / 60000;
+        return diff > 0 && diff < 120;
+      })
+      .map(g => formatFixture(g, 'football'));
+    res.json({ success: true, count: live.length, fixtures: live });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
+
+app.get('/api/sports', async (req, res) => {
+  try {
+    const res2 = await axios.get(`${BASE}/sports`, {
+      params: { apiKey: API_KEY },
+      timeout: 8000
+    });
+    res.json({ success: true, data: res2.data });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
 });
 
 app.get('/api/status', (req, res) => {
@@ -96,7 +136,6 @@ app.get('/api/status', (req, res) => {
 });
 
 module.exports = app;
-
 if (require.main === module) {
   app.listen(3000, () => console.log('OKAY running on port 3000'));
 }
