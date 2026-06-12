@@ -10,14 +10,23 @@ app.use(express.static('public'));
 const API_KEY = '46d72b004a13cdf6fb4ab3a747178297';
 const BASE = 'https://api.the-odds-api.com/v4';
 
-const SPORT_KEYS = {
-  football: 'soccer_fifa_world_cup',
-  basketball: 'basketball_nba',
-  hockey: 'icehockey_nhl',
-  tennis: 'tennis_wta_queens_club_champ',
-  mma: 'mma_mixed_martial_arts',
-  baseball: 'baseball_mlb'
-};
+const ALL_SPORTS = [
+  { key: 'soccer_fifa_world_cup', sport: 'football' },
+  { key: 'soccer_brazil_serie_b', sport: 'football' },
+  { key: 'soccer_chile_campeonato', sport: 'football' },
+  { key: 'soccer_china_superleague', sport: 'football' },
+  { key: 'soccer_conmebol_copa_libertadores', sport: 'football' },
+  { key: 'soccer_norway_eliteserien', sport: 'football' },
+  { key: 'soccer_sweden_allsvenskan', sport: 'football' },
+  { key: 'soccer_league_of_ireland', sport: 'football' },
+  { key: 'basketball_nba', sport: 'basketball' },
+  { key: 'basketball_wnba', sport: 'basketball' },
+  { key: 'icehockey_nhl', sport: 'hockey' },
+  { key: 'tennis_wta_queens_club_champ', sport: 'tennis' },
+  { key: 'mma_mixed_martial_arts', sport: 'mma' },
+  { key: 'baseball_mlb', sport: 'baseball' },
+  { key: 'americanfootball_ufl', sport: 'nfl' },
+];
 
 async function fetchOdds(sportKey) {
   try {
@@ -33,7 +42,6 @@ async function fetchOdds(sportKey) {
     });
     return res.data || [];
   } catch (e) {
-    console.error('Odds API error:', e.message);
     return [];
   }
 }
@@ -66,12 +74,47 @@ function formatFixture(game, sport) {
   };
 }
 
+function isToday(dateStr) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  return d.getFullYear() === now.getFullYear() &&
+    d.getMonth() === now.getMonth() &&
+    d.getDate() === now.getDate();
+}
+
+function isTomorrow(dateStr) {
+  const d = new Date(dateStr);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return d.getFullYear() === tomorrow.getFullYear() &&
+    d.getMonth() === tomorrow.getMonth() &&
+    d.getDate() === tomorrow.getDate();
+}
+
 app.get('/api/fixtures', async (req, res) => {
-  const { sport = 'football' } = req.query;
-  const sportKey = SPORT_KEYS[sport] || SPORT_KEYS.football;
+  const { day = 'today', sport = 'all' } = req.query;
+
   try {
-    const games = await fetchOdds(sportKey);
-    const fixtures = games.map(g => formatFixture(g, sport));
+    const sportsToFetch = sport === 'all'
+      ? ALL_SPORTS
+      : ALL_SPORTS.filter(s => s.sport === sport);
+
+    const results = await Promise.allSettled(
+      sportsToFetch.map(s => fetchOdds(s.key).then(games =>
+        games.map(g => formatFixture(g, s.sport))
+      ))
+    );
+
+    let fixtures = results.flatMap(r =>
+      r.status === 'fulfilled' ? r.value : []
+    );
+
+    if (day === 'today') {
+      fixtures = fixtures.filter(f => isToday(f.date) || f.status === 'LIVE');
+    } else if (day === 'tomorrow') {
+      fixtures = fixtures.filter(f => isTomorrow(f.date));
+    }
+
     res.json({ success: true, count: fixtures.length, fixtures });
   } catch (e) {
     res.status(500).json({ success: false, error: e.message });
@@ -80,13 +123,19 @@ app.get('/api/fixtures', async (req, res) => {
 
 app.get('/api/live', async (req, res) => {
   try {
-    const games = await fetchOdds(SPORT_KEYS.football);
+    const results = await Promise.allSettled(
+      ALL_SPORTS.map(s => fetchOdds(s.key).then(games =>
+        games.map(g => formatFixture(g, s.sport))
+      ))
+    );
     const now = new Date();
-    const live = games.filter(g => {
-      const start = new Date(g.commence_time);
-      const diff = (now - start) / 60000;
-      return diff > 0 && diff < 120;
-    }).map(g => formatFixture(g, 'football'));
+    const live = results
+      .flatMap(r => r.status === 'fulfilled' ? r.value : [])
+      .filter(f => {
+        const start = new Date(f.date);
+        const diff = (now - start) / 60000;
+        return diff > 0 && diff < 120;
+      });
     res.json({ success: true, count: live.length, fixtures: live });
   } catch (e) {
     res.status(500).json({ success: false, error: e.message });
