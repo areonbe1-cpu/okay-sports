@@ -11,12 +11,15 @@ const API_KEY = '46d72b004a13cdf6fb4ab3a747178297';
 const BASE = 'https://api.the-odds-api.com/v4';
 
 const SPORT_KEYS = {
-  football: 'soccer_epl',
+  football: 'soccer_fifa_world_cup',
   basketball: 'basketball_nba',
   hockey: 'icehockey_nhl',
-  tennis: 'tennis_atp_french_open',
-  mma: 'mma_mixed_martial_arts'
+  tennis: 'tennis_wta_queens_club_champ',
+  mma: 'mma_mixed_martial_arts',
+  baseball: 'baseball_mlb',
+  nfl: 'americanfootball_nfl'
 };
+
 
 async function fetchOdds(sportKey, markets = 'h2h') {
   try {
