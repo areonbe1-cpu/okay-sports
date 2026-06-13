@@ -358,11 +358,11 @@ function getPredictions(f){
   return preds.slice(0,3);
 }
 
-function sortByTime(fixtures){
+function sortByTime(fixtures){/*fixed*/
   return [...fixtures].sort((a,b)=>{
     const ta=a.time||'99:99';
     const tb=b.time||'99:99';
-    return ta.localeCompare(tb);
+    const ap=ta.split(':').map(Number);const bp=tb.split(':').map(Number);return (ap[0]*60+(ap[1]||0))-(bp[0]*60+(bp[1]||0));
   });
 }
 
@@ -378,7 +378,7 @@ function renderFixtures(){
   const groups={};
   fixtures.forEach(f=>{
     const t=f.time||'00:00';
-    const hour=t.split(':')[0]+'h00';
+    const hour=t.split(':')[0].padStart(2,'0')+':00';
     if(!groups[hour])groups[hour]=[];
     groups[hour].push(f);
   });
@@ -429,9 +429,7 @@ ${ob('h2h_home','1 Home',h.home)}
 ${f.sport==='football'||f.sport==='hockey'?ob('h2h_draw','X Draw',h.draw):''}
 ${ob('h2h_away','2 Away',h.away)}
 </div>
-<div class="preds-wrap">
-${preds.map(p=>`<div class="pred-row ${p.type}">${p.text}</div>`).join('')}
-</div>
+<div class="preds-wrap">\${preds.map(function(p){return '<div class="pred-row '+p.type+'">'+p.text+'</div>';}).join('')}</div>
 </div>`;
 }
 
