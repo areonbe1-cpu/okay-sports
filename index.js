@@ -23,6 +23,43 @@ function getDateStr(offset = 0) {
   return d.toISOString().split('T')[0];
 }
 
+function parseScore(result, side) {
+  if (!result || result.trim() === '' || result.trim() === '-') return null;
+  const parts = result.split(' - ');
+  if (side === 'home' && parts[0] !== undefined && parts[0].trim() !== '') return parts[0].trim();
+  if (side === 'away' && parts[1] !== undefined && parts[1].trim() !== '') return parts[1].trim();
+  return null;
+}
+
+function formatEvent(e, sport) {
+  const homeScore = parseScore(e.event_final_result, 'home');
+  const awayScore = parseScore(e.event_final_result, 'away');
+  const isLive = e.event_live === '1';
+  const status = isLive ? 'LIVE' : (e.event_status || 'NS');
+
+  return {
+    id: String(e.event_key || e.event_id || Math.random()),
+    sport,
+    league: e.league_name || e.event_league || '',
+    country: e.country_name || e.event_country || '',
+    date: e.event_date || e.event_date_start || '',
+    time: e.event_time || '',
+    status,
+    elapsed: isLive ? (e.event_status || '') : null,
+    home: {
+      name: e.event_home_team || e.event_first_player || 'Home',
+      logo: e.home_team_logo || null,
+      score: homeScore
+    },
+    away: {
+      name: e.event_away_team || e.event_second_player || 'Away',
+      logo: e.away_team_logo || null,
+      score: awayScore
+    },
+    markets: { h2h: { home: null, draw: null, away: null } }
+  };
+}
+
 async function fetchFixtures(apiUrl, sport, date) {
   try {
     const res = await axios.get(apiUrl, {
@@ -30,26 +67,8 @@ async function fetchFixtures(apiUrl, sport, date) {
       timeout: 10000
     });
     const events = res.data?.result || [];
-    return events.map(e => ({
-      id: String(e.event_key || e.event_id),
-      sport,
-      league: e.league_name || e.event_league || '',
-      country: e.country_name || '',
-      date: e.event_date || e.event_date_start || date,
-      time: e.event_time || '',
-      status: e.event_status || e.event_live === '1' ? (e.event_live === '1' ? 'LIVE' : e.event_status) : 'NS',
-      home: {
-        name: e.event_home_team || e.event_first_player || 'Home',
-        logo: e.home_team_logo || null,
-        score: e.event_final_result ? e.event_final_result.split(' - ')[0] : null
-      },
-      away: {
-        name: e.event_away_team || e.event_second_player || 'Away',
-        logo: e.away_team_logo || null,
-        score: e.event_final_result ? e.event_final_result.split(' - ')[1] : null
-      },
-      markets: { h2h: { home: null, draw: null, away: null } }
-    }));
+    if (!Array.isArray(events)) return [];
+    return events.map(e => formatEvent(e, sport));
   } catch (e) {
     return [];
   }
@@ -62,27 +81,8 @@ async function fetchLive(apiUrl, sport) {
       timeout: 10000
     });
     const events = res.data?.result || [];
-    return events.map(e => ({
-      id: String(e.event_key || e.event_id),
-      sport,
-      league: e.league_name || '',
-      country: e.country_name || '',
-      date: e.event_date || '',
-      time: e.event_time || '',
-      status: 'LIVE',
-      elapsed: e.event_status || '',
-      home: {
-        name: e.event_home_team || e.event_first_player || 'Home',
-        logo: e.home_team_logo || null,
-        score: e.event_home_final_result || null
-      },
-      away: {
-        name: e.event_away_team || e.event_second_player || 'Away',
-        logo: e.away_team_logo || null,
-        score: e.event_away_final_result || null
-      },
-      markets: { h2h: { home: null, draw: null, away: null } }
-    }));
+    if (!Array.isArray(events)) return [];
+    return events.map(e => ({ ...formatEvent(e, sport), status: 'LIVE' }));
   } catch (e) {
     return [];
   }
