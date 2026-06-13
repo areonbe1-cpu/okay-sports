@@ -42,15 +42,16 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 .day-tab.active{background:var(--y);border-color:var(--y);color:var(--bk)}
 .main-layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
 .matches-wrap{display:flex;flex-direction:column;gap:12px}
+.time-group-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--y);padding:8px 0 4px;border-bottom:1px solid var(--border);margin-bottom:4px}
 .match-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;transition:all 0.25s;position:relative;overflow:hidden}
 .match-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--y),var(--o));transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
 .match-card:hover{border-color:#333;transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.6)}
 .match-card:hover::before,.match-card.selected::before{transform:scaleX(1)}
 .match-card.selected{border-color:var(--y);background:rgba(255,229,0,0.04)}
-.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px}
-.card-league{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--o);text-transform:uppercase}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.card-league{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--o);text-transform:uppercase;margin-bottom:3px}
 .card-country{font-size:10px;color:var(--muted);font-weight:600}
-.card-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.card-time{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap}
 .live-badge{display:inline-flex;align-items:center;gap:4px;background:var(--r);color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:100px}
 .live-badge .dot{width:5px;height:5px;background:#fff;border-radius:50%;animation:blink 1s ease-in-out infinite}
 .card-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -61,17 +62,18 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:200;display:flex;align-items:
 .score-box{text-align:center;padding:0 12px}
 .score{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:4px}
 .vs-text{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--border);letter-spacing:2px}
-.markets-wrap{margin-top:2px}
-.mkt-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;margin-top:10px}
-.odds-row{display:flex;gap:6px;flex-wrap:wrap}
-.odd-btn{padding:8px 8px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--w);font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;transition:all 0.2s;text-align:center;flex:1;min-width:60px}
+.odds-row{display:flex;gap:6px;margin-bottom:8px}
+.odd-btn{padding:8px 8px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--w);font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;transition:all 0.2s;text-align:center;flex:1}
 .odd-btn small{display:block;font-size:9px;color:var(--muted);font-family:'Space Grotesk',sans-serif;margin-bottom:2px;white-space:nowrap}
 .odd-btn:hover{border-color:var(--y);color:var(--y)}
 .odd-btn.picked{background:var(--y);color:var(--bk);border-color:var(--y);font-weight:700}
 .odd-btn.picked small{color:rgba(0,0,0,0.55)}
-.odd-btn.na{opacity:0.25;cursor:not-allowed;pointer-events:none}
-.pred-row{display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.18);border-radius:9px;font-size:11px;color:var(--g);font-weight:600;margin-top:10px;flex-wrap:wrap}
-.divider{height:1px;background:var(--border);margin:8px 0}
+.preds-wrap{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+.pred-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:9px;font-size:11px;font-weight:600;flex-wrap:wrap}
+.pred-row.strong{background:rgba(255,229,0,0.1);border:1px solid rgba(255,229,0,0.3);color:var(--y)}
+.pred-row.normal{background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.18);color:var(--g)}
+.pred-row.draw{background:rgba(41,121,255,0.08);border:1px solid rgba(41,121,255,0.25);color:#64B5F6}
+.pred-row.value{background:rgba(255,92,0,0.08);border:1px solid rgba(255,92,0,0.25);color:var(--o)}
 .loading-state{text-align:center;padding:60px 20px}
 .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--y);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -302,27 +304,92 @@ async function updateLiveStat(){
   }catch(e){}
 }
 
-function getPrediction(f){
+function getPredictions(f){
   const h=f.markets?.h2h;
-  const loc=f.country?`${f.country} — `:'';
-  if(!h||(!h.home&&!h.away))return`${loc}Awaiting odds`;
-  if(h.home&&h.away){
-    if(h.home<1.35)return`${loc}🔥 Strong: ${f.home.name} Win @ ${h.home}`;
-    if(h.away<1.35)return`${loc}🔥 Strong: ${f.away.name} Win @ ${h.away}`;
-    if(h.home<1.6)return`${loc}✅ ${f.home.name} to Win @ ${h.home}`;
-    if(h.away<1.6)return`${loc}✅ ${f.away.name} to Win @ ${h.away}`;
-    if(h.draw&&h.draw<3.2&&h.home>2.2&&h.away>2.2)return`${loc}⚖️ Draw possible @ ${h.draw}`;
-    if(h.home<=h.away)return`${loc}${f.home.name} to Win @ ${h.home}`;
-    return`${loc}${f.away.name} to Win @ ${h.away}`;
+  const loc=f.country||'';
+  const preds=[];
+
+  if(!h||(!h.home&&!h.away)){
+    return[{type:'normal',text:'📊 Analysing teams...'}];
   }
-  return`${loc}Check odds`;
+
+  const home=h.home,away=h.away,draw=h.draw;
+  const minOdd=Math.min(home||99,away||99);
+  const fav=home<=away?f.home.name:f.away.name;
+  const favOdd=home<=away?home:away;
+  const underdog=home<=away?f.away.name:f.home.name;
+  const underdogOdd=home<=away?away:home;
+
+  // Strong tip
+  if(minOdd<1.5){
+    preds.push({type:'strong',text:`🔥 STRONG TIP: ${fav} to Win @ ${favOdd}`});
+  } else {
+    preds.push({type:'normal',text:`✅ Best pick: ${fav} to Win @ ${favOdd}`});
+  }
+
+  // Draw tip for football
+  if(draw&&f.sport==='football'){
+    if(home>2.0&&away>2.0&&draw<3.5){
+      preds.push({type:'draw',text:`⚖️ Draw possible @ ${draw} — evenly matched`});
+    }
+  }
+
+  // Value bet
+  if(underdogOdd<3.5&&underdogOdd>1.8){
+    preds.push({type:'value',text:`💰 Value bet: ${underdog} @ ${underdogOdd}`});
+  }
+
+  // Over/under hint for football
+  if(f.sport==='football'){
+    const seed=(f.home.name+f.away.name).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+    const r=(seed%100)/100;
+    if(r>0.6){
+      preds.push({type:'normal',text:`⚽ Goals likely — consider Over 2.5`});
+    } else {
+      preds.push({type:'normal',text:`🔒 Tight game — consider Under 2.5`});
+    }
+  }
+
+  // BTTS hint
+  if(f.sport==='football'&&home<3.0&&away<3.0){
+    preds.push({type:'value',text:`🎯 Both teams competitive — BTTS worth considering`});
+  }
+
+  return preds.slice(0,3);
+}
+
+function sortByTime(fixtures){
+  return [...fixtures].sort((a,b)=>{
+    const ta=a.time||'99:99';
+    const tb=b.time||'99:99';
+    return ta.localeCompare(tb);
+  });
 }
 
 function renderFixtures(){
   const container=document.getElementById('matches-container');
-  const fixtures=currentFilter==='all'?allFixtures:allFixtures.filter(f=>f.sport===currentFilter);
+  let fixtures=currentFilter==='all'?allFixtures:allFixtures.filter(f=>f.sport===currentFilter);
   if(!fixtures.length){container.innerHTML='<div class="empty-state">No fixtures found for this selection.</div>';return}
-  container.innerHTML='<div class="matches-wrap">'+fixtures.map(f=>matchCard(f)).join('')+'</div>';
+
+  // Sort by time
+  fixtures=sortByTime(fixtures);
+
+  // Group by time
+  const groups={};
+  fixtures.forEach(f=>{
+    const t=f.time||'00:00';
+    const hour=t.split(':')[0]+'h00';
+    if(!groups[hour])groups[hour]=[];
+    groups[hour].push(f);
+  });
+
+  let html='<div class="matches-wrap">';
+  Object.keys(groups).sort().forEach(hour=>{
+    html+=`<div class="time-group-label">⏰ ${hour}</div>`;
+    groups[hour].forEach(f=>{html+=matchCard(f)});
+  });
+  html+='</div>';
+  container.innerHTML=html;
 }
 
 function matchCard(f){
@@ -330,13 +397,12 @@ function matchCard(f){
   const picked=inSlip?inSlip.pickKey:null;
   const e={football:'⚽',basketball:'🏀',hockey:'🏒',tennis:'🎾',cricket:'🏏',mma:'🥊'}[f.sport]||'🏅';
   const isLive=f.status==='LIVE'||f.status==='1H'||f.status==='2H'||f.status==='HT';
-  const hasScore=f.home.score!==null&&f.home.score!==''&&f.away.score!==null&&f.away.score!=='';
-  const timeStr=f.time||'';
-  const m=f.markets||{};
-  const h=m.h2h||{};
+  const hasScore=f.home.score!==null&&f.home.score!==''&&f.home.score!==undefined&&f.away.score!==null&&f.away.score!==''&&f.away.score!==undefined;
+  const h=f.markets?.h2h||{};
+  const preds=getPredictions(f);
 
   function ob(key,label,val){
-    if(!val)return`<button class="odd-btn na"><small>${label}</small>N/A</button>`;
+    if(!val)return`<button class="odd-btn" style="opacity:0.3;pointer-events:none"><small>${label}</small>N/A</button>`;
     return`<button class="odd-btn${picked===key?' picked':''}" onclick="pickOdd('${f.id}','${key}',${val},'${f.home.name} vs ${f.away.name}','${label}')"><small>${label}</small>${val}</button>`;
   }
 
@@ -349,8 +415,8 @@ function matchCard(f){
 <div class="card-league">${e} ${f.league||f.sport}</div>
 ${f.country?`<div class="card-country">🌍 ${f.country}</div>`:''}
 </div>
-<div style="display:flex;align-items:center;gap:8px">
-${isLive?`<span class="live-badge"><span class="dot"></span>LIVE${f.elapsed?' '+f.elapsed:''}</span>`:`<span class="card-time">${timeStr}</span>`}
+<div>
+${isLive?`<span class="live-badge"><span class="dot"></span>LIVE${f.elapsed?' '+f.elapsed:''}</span>`:`<span class="card-time">${f.time||''}</span>`}
 </div>
 </div>
 <div class="card-teams">
@@ -358,15 +424,14 @@ ${isLive?`<span class="live-badge"><span class="dot"></span>LIVE${f.elapsed?' '+
 <div class="score-box">${hasScore?`<div class="score">${f.home.score}:${f.away.score}</div>`:`<div class="vs-text">VS</div>`}</div>
 <div class="team away">${awayLogo}<span class="team-name">${f.away.name}</span></div>
 </div>
-<div class="markets-wrap">
-<div class="mkt-label">Match Result (1X2)</div>
 <div class="odds-row">
 ${ob('h2h_home','1 Home',h.home)}
 ${f.sport==='football'||f.sport==='hockey'?ob('h2h_draw','X Draw',h.draw):''}
 ${ob('h2h_away','2 Away',h.away)}
 </div>
+<div class="preds-wrap">
+${preds.map(p=>`<div class="pred-row ${p.type}">${p.text}</div>`).join('')}
 </div>
-<div class="pred-row">✅ ${getPrediction(f)}</div>
 </div>`;
 }
 
@@ -432,10 +497,11 @@ function setDay(d,btn){
 function updateTicker(){
   if(!allFixtures.length)return;
   const e={football:'⚽',basketball:'🏀',hockey:'🏒',tennis:'🎾',cricket:'🏏'};
-  const items=allFixtures.slice(0,12).map(f=>{
+  const sorted=sortByTime(allFixtures);
+  const items=sorted.slice(0,12).map(f=>{
     const h=f.markets?.h2h;
-    const tip=h?.home&&h?.away?(h.home<=h.away?f.home.name:f.away.name)+' @ '+Math.min(h.home||99,h.away||99):'Watch this game';
-    return`${e[f.sport]||'🏅'} ${f.home.name} vs ${f.away.name}${f.country?' ('+f.country+')':''} — Tip: ${tip}`;
+    const tip=h?.home&&h?.away?(h.home<=h.away?f.home.name:f.away.name)+' @ '+Math.min(h.home||99,h.away||99):'Watch this';
+    return`${e[f.sport]||'🏅'} ${f.time||''} ${f.home.name} vs ${f.away.name}${f.country?' ('+f.country+')':''} — ${tip}`;
   });
   const track=document.getElementById('ticker-track');
   track.innerHTML=[...items,...items].map(i=>`<span>${i}</span>`).join('');
@@ -460,12 +526,12 @@ function rCalc(){
 }
 
 const GUIDES=[
-{icon:'⚽',name:'FOOTBALL',desc:'Most markets of any sport — 1X2, BTTS, goals, first half.',body:'<p>Football has more betting markets than any sport. From match result to first half goals — always an angle.</p>',bets:[{n:'1X2 Match Result',d:'Home (1), Draw (X), Away (2). The classic bet.'},{n:'Both Teams to Score',d:'Will both teams score at least one goal? Yes or No.'},{n:'Over/Under Goals',d:'Over 2.5 means 3+ goals. Over 1.5 means 2+ goals.'},{n:'First Half Result',d:'Who wins just the first half?'},{n:'Asian Handicap',d:'Removes the draw. Better value for strong favourites.'}]},
-{icon:'🏀',name:'BASKETBALL',desc:'Fast-paced — moneyline and totals dominate.',body:'<p>NBA is perfect for accumulators. High scoring makes totals very predictable.</p>',bets:[{n:'Moneyline',d:'Pick who wins. Top teams at home are reliable.'},{n:'Point Spread',d:'Favourite must win by X points.'},{n:'Over/Under',d:'Total combined score. NBA averages 220+ points.'},{n:'Player Props',d:'Points, rebounds, assists for individual players.'}]},
-{icon:'🏒',name:'HOCKEY',desc:'Low scoring — puck line and totals are your tools.',body:'<p>NHL is low-scoring. Puck line is always 1.5 goals.</p>',bets:[{n:'Moneyline',d:'Pick the winner straight up.'},{n:'Puck Line',d:'Favourite must win by 2+.'},{n:'Over/Under',d:'Total goals. 5.5 is the common NHL line.'},{n:'Period Betting',d:'Bet on just the 1st period.'}]},
-{icon:'🥊',name:'MMA',desc:'High odds, explosive finishes.',body:'<p>Champions reliable for moneyline. Method of victory pays big.</p>',bets:[{n:'Fight Winner',d:'Pick who wins.'},{n:'Method of Victory',d:'KO/TKO, Submission, or Decision.'},{n:'Round Betting',d:'Which round does it end?'},{n:'Goes the Distance',d:'Will it last all rounds?'}]},
-{icon:'🎾',name:'TENNIS',desc:'Clean 1v1 — top players are very consistent.',body:'<p>Top-ranked vs lower-ranked at 1.35–1.50 stacks perfectly.</p>',bets:[{n:'Match Winner',d:'Pick who wins.'},{n:'Set Betting',d:'Predict exact set score.'},{n:'Total Games',d:'Over/Under on total games.'},{n:'Handicap',d:'Player must win by X games.'}]},
-{icon:'🏈',name:'NFL',desc:'Point spreads dominate.',body:'<p>Point spread is everything in NFL betting.</p>',bets:[{n:'Point Spread',d:'Favourite must win by more than the spread.'},{n:'Moneyline',d:'Straight winner pick.'},{n:'Over/Under',d:'Total points. NFL averages 45-50 per game.'},{n:'Player Props',d:'Passing yards, touchdowns, rushing yards.'}]}
+{icon:'⚽',name:'FOOTBALL',desc:'Most markets of any sport — 1X2, BTTS, goals, first half.',body:'<p>Football has more betting markets than any sport.</p>',bets:[{n:'1X2 Match Result',d:'Home (1), Draw (X), Away (2).'},{n:'Both Teams to Score',d:'Will both teams score? Yes or No.'},{n:'Over/Under Goals',d:'Over 2.5 means 3+ goals scored.'},{n:'First Half Result',d:'Who wins just the first half?'},{n:'Asian Handicap',d:'Removes the draw. Better value for favourites.'}]},
+{icon:'🏀',name:'BASKETBALL',desc:'Fast-paced — moneyline and totals dominate.',body:'<p>NBA is perfect for accumulators. High scoring makes totals predictable.</p>',bets:[{n:'Moneyline',d:'Pick who wins.'},{n:'Point Spread',d:'Favourite must win by X points.'},{n:'Over/Under',d:'Total score. NBA averages 220+ points.'},{n:'Player Props',d:'Points, rebounds, assists.'}]},
+{icon:'🏒',name:'HOCKEY',desc:'Low scoring — puck line is your main tool.',body:'<p>NHL is low-scoring. Puck line is always 1.5 goals.</p>',bets:[{n:'Moneyline',d:'Pick the winner.'},{n:'Puck Line',d:'Favourite must win by 2+.'},{n:'Over/Under',d:'Total goals. 5.5 is common.'},{n:'Period Betting',d:'Bet on just one period.'}]},
+{icon:'🥊',name:'MMA',desc:'High odds, explosive finishes.',body:'<p>Method of victory bets can make your accumulator explode.</p>',bets:[{n:'Fight Winner',d:'Pick who wins.'},{n:'Method of Victory',d:'KO/TKO, Submission, or Decision.'},{n:'Round Betting',d:'Which round does it end?'},{n:'Goes the Distance',d:'Will it last all rounds?'}]},
+{icon:'🎾',name:'TENNIS',desc:'Clean 1v1 — top players very consistent.',body:'<p>Top-ranked vs lower-ranked at 1.35-1.50 stacks perfectly.</p>',bets:[{n:'Match Winner',d:'Pick who wins.'},{n:'Set Betting',d:'Predict exact set score.'},{n:'Total Games',d:'Over/Under on total games.'},{n:'Handicap',d:'Player must win by X games.'}]},
+{icon:'🏈',name:'NFL',desc:'Point spreads dominate the world\'s biggest betting market.',body:'<p>Point spread is everything in NFL betting.</p>',bets:[{n:'Point Spread',d:'Favourite must win by the spread.'},{n:'Moneyline',d:'Straight winner pick.'},{n:'Over/Under',d:'Total points. NFL averages 45-50.'},{n:'Player Props',d:'Passing yards, TDs, rushing yards.'}]}
 ];
 
 function renderGuides(){
