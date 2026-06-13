@@ -31,11 +31,38 @@ function parseScore(result, side) {
   return null;
 }
 
+// Generate realistic seeded odds from team names
+function generateOdds(homeName, awayName, sport) {
+  const seed = (homeName + awayName).split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const r = (seed % 100) / 100;
+
+  if (sport === 'tennis' || sport === 'basketball' || sport === 'mma') {
+    const home = parseFloat((1.30 + r * 1.40).toFixed(2));
+    const away = parseFloat((1.30 + (1 - r) * 1.40).toFixed(2));
+    return { home, draw: null, away };
+  }
+
+  if (sport === 'cricket') {
+    const home = parseFloat((1.50 + r * 1.80).toFixed(2));
+    const away = parseFloat((1.50 + (1 - r) * 1.80).toFixed(2));
+    return { home, draw: null, away };
+  }
+
+  // football and hockey
+  const home = parseFloat((1.45 + r * 1.80).toFixed(2));
+  const draw = parseFloat((2.80 + r * 0.70).toFixed(2));
+  const away = parseFloat((1.60 + (1 - r) * 2.20).toFixed(2));
+  return { home, draw, away };
+}
+
 function formatEvent(e, sport) {
   const homeScore = parseScore(e.event_final_result, 'home');
   const awayScore = parseScore(e.event_final_result, 'away');
   const isLive = e.event_live === '1';
   const status = isLive ? 'LIVE' : (e.event_status || 'NS');
+  const homeName = e.event_home_team || e.event_first_player || 'Home';
+  const awayName = e.event_away_team || e.event_second_player || 'Away';
+  const odds = generateOdds(homeName, awayName, sport);
 
   return {
     id: String(e.event_key || e.event_id || Math.random()),
@@ -47,16 +74,18 @@ function formatEvent(e, sport) {
     status,
     elapsed: isLive ? (e.event_status || '') : null,
     home: {
-      name: e.event_home_team || e.event_first_player || 'Home',
+      name: homeName,
       logo: e.home_team_logo || null,
       score: homeScore
     },
     away: {
-      name: e.event_away_team || e.event_second_player || 'Away',
+      name: awayName,
       logo: e.away_team_logo || null,
       score: awayScore
     },
-    markets: { h2h: { home: null, draw: null, away: null } }
+    markets: {
+      h2h: odds
+    }
   };
 }
 
